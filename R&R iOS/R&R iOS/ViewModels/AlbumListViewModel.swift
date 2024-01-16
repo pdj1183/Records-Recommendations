@@ -6,3 +6,11 @@
 //
 
 import Foundation
+
+class AlbumListViewModel: ObservableObject {
+    @Published var showNewItemView = false
+    
+    init() {
+        
+    }
+}

@@ -6,3 +6,10 @@
 //
 
 import Foundation
+
+struct User {
+    let id: String
+    let firstName: String
+    let email: String
+    let joined: TimeInterval
+}

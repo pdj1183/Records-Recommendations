@@ -6,3 +6,11 @@
 //
 
 import Foundation
+
+class AlbumItemViewModel: ObservableObject {
+    @Published var showEditAlbumItemView = false
+    @Published var showEditListensVeiw = false
+init() {
+        
+    }
+}

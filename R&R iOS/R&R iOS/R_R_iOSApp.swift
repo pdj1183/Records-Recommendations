@@ -9,12 +9,11 @@ import SwiftUI
 
 @main
 struct R_R_iOSApp: App {
-    let persistenceController = PersistenceController.shared
 
     var body: some Scene {
         WindowGroup {
-            ContentView()
-                .environment(\.managedObjectContext, persistenceController.container.viewContext)
+            MainView().environmentObject(CloudModel())
+                .environment(\.font, Font.custom("Cochin", size: 16))
         }
     }
 }
