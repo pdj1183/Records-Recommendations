@@ -8,8 +8,23 @@
 import SwiftUI
 
 struct ProfileView: View {
+    @StateObject var viewModel = ProfileViewModel()
+    
+    init () {
+        
+    }
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        NavigationView {
+           HeaderVeiw(subTitle: "Profile", color: Color("Orange"))
+                .offset(y: -27)
+            VStack{}
+                .toolbar{
+                    
+                }
+                .padding()
+            
+                
+        }
     }
 }
 
