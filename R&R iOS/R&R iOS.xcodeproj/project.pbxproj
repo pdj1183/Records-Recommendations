@@ -92,6 +92,7 @@
 		48BB1D132B3FC04D0017CC98 /* R&R iOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "R&R iOSTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		48BB1D1D2B3FC04D0017CC98 /* R&R iOSUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "R&R iOSUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		48C1C6AF2B40BDEF005C9EFE /* Amoitar.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Amoitar.ttf; sourceTree = "<group>"; };
+		48CE5DF12B5840530087EC12 /* R&R iOSRelease.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "R&R iOSRelease.entitlements"; sourceTree = "<group>"; };
 		48DF8DB52B48ADED0006C5A4 /* Cochin.ttc */ = {isa = PBXFileReference; lastKnownFileType = file; name = Cochin.ttc; path = ../../../../../../../System/Library/Fonts/Supplemental/Cochin.ttc; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -189,6 +190,7 @@
 		48BB1CFE2B3FC04C0017CC98 /* R&R iOS */ = {
 			isa = PBXGroup;
 			children = (
+				48CE5DF12B5840530087EC12 /* R&R iOSRelease.entitlements */,
 				48C1C6A92B40B9DC005C9EFE /* fonts */,
 				481BE5842B40CE9000036E45 /* Models */,
 				481BE5832B40CE7F00036E45 /* ViewModels */,
@@ -543,7 +545,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "mine.R-R-iOS";
+				PRODUCT_BUNDLE_IDENTIFIER = "pdj1183.R-R-iOS";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -556,7 +558,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = "R&R iOS/R_R_iOS.entitlements";
+				CODE_SIGN_ENTITLEMENTS = "R&R iOS/R&R iOSRelease.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"R&R iOS/Preview Content\"";
@@ -574,7 +576,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "mine.R-R-iOS";
+				PRODUCT_BUNDLE_IDENTIFIER = "pdj1183.R-R-iOS";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
