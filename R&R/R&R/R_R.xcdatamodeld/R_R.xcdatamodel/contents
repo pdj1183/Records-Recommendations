@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="22522" systemVersion="23D56" minimumToolsVersion="Automatic" sourceLanguage="Swift" usedWithCloudKit="YES" userDefinedModelVersionIdentifier="">
+    <entity name="AlbumItem" representedClassName="AlbumItem" syncable="YES" codeGenerationType="class">
+        <attribute name="artist" attributeType="String" defaultValueString="NA"/>
+        <attribute name="genre" optional="YES" attributeType="String" defaultValueString=""/>
+        <attribute name="id" optional="YES" attributeType="UUID" defaultValueString="6A6C4620-B839-49FF-B95F-2D52D3E48972" usesScalarValueType="YES"/>
+        <attribute name="lastListened" attributeType="Date" defaultDateTimeInterval="728944320" usesScalarValueType="NO"/>
+        <attribute name="listens" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="name" attributeType="String" defaultValueString="NA"/>
+    </entity>
+    <entity name="Item" representedClassName="Item" syncable="YES" codeGenerationType="class">
+        <attribute name="timestamp" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+    </entity>
+    <entity name="WeeklyRecommendation" representedClassName="WeeklyRecommendation" syncable="YES" codeGenerationType="class">
+        <attribute name="recommendation" optional="YES" attributeType="String"/>
+    </entity>
+</model>
