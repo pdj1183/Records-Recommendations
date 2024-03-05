@@ -40,8 +40,11 @@ struct RecommendedAlbumItemView: View {
             .buttonStyle(.borderless)
 
         }
+        .onAppear {
+            viewModel.fetchAlbum(album: viewModel.album)
+        }
         .sheet(isPresented: $viewModel.showEditAlbumItemView, onDismiss: {viewModel.fetchAlbum(album: viewModel.album)  } , content: {
-            EditAlbumItemView(index: 0, color: Color("Purple"), viewModel: EditAlbumItemViewModel(albumItem: viewModel.album), EditAlbumItemPresented: $viewModel.showEditAlbumItemView)
+            EditAlbumItemView(index: 0, color: Color("Cyan"), viewModel: EditAlbumItemViewModel(albumItem: viewModel.album), EditAlbumItemPresented: $viewModel.showEditAlbumItemView)
         })
 
     }

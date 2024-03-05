@@ -6,6 +6,8 @@ class CoreDataManager {
     static let shared = CoreDataManager()
     let container: NSPersistentCloudKitContainer
     private var albumsArr: [AlbumItem] = []
+    private var gFilterOptions: FilterOptions = FilterOptions.all
+    private var gSortOptions: SortOptions = SortOptions.listens
     
     private init() {
         container = NSPersistentCloudKitContainer(name: "R_R")
@@ -49,6 +51,7 @@ class CoreDataManager {
             let results = try container.viewContext.fetch(fetchRequest)
             
             if let albumToUpdate = results.first {
+                let i = albumsArr.firstIndex(of: albumToUpdate)
                 // Updating album's attributes
                 albumToUpdate.name = editedAlbum.name
                 albumToUpdate.artist = editedAlbum.artist
@@ -57,6 +60,9 @@ class CoreDataManager {
                 
                 saveContext() // Save changes to the context
                 print("Album updated successfully.")
+                
+                
+                albumsArr[i!] = albumToUpdate
             }
         } catch {
             print("Failed to fetch album: \(error.localizedDescription)")
@@ -87,8 +93,12 @@ class CoreDataManager {
         do {
             let results = try container.viewContext.fetch(fetchRequest)
             if let album = results.first {
+                let i = albumsArr.firstIndex(of: album)
+                album.lastListened = Date()
                 album.listens += 1 // Incrementing listen count by 1
                 saveContext() // Save changes to the context
+               
+                albumsArr[i!] = album
             }
         } catch {
             print("Failed to fetch album: \(error.localizedDescription)")
@@ -104,15 +114,17 @@ extension CoreDataManager {
         let sortDescriptor: NSSortDescriptor
         switch sortOptions {
         case .artist:
-            sortDescriptor = NSSortDescriptor(key: "artist", ascending: true)
+            sortDescriptor = NSSortDescriptor(key: "artist", ascending: true, selector: #selector(NSString.caseInsensitiveCompare))
         case .date:
             sortDescriptor = NSSortDescriptor(key: "lastListened", ascending: true) // Adjust the key as per your model
         case .listens:
             sortDescriptor = NSSortDescriptor(key: "listens", ascending: false)
         case .name:
-            sortDescriptor = NSSortDescriptor(key: "name", ascending: true)
+            sortDescriptor = NSSortDescriptor(key: "name", ascending: true, selector: #selector(NSString.caseInsensitiveCompare))
         }
-        fetchRequest.sortDescriptors = [sortDescriptor]
+        
+        let secondarySort: NSSortDescriptor = NSSortDescriptor(key: "name", ascending: true, selector: #selector(NSString.caseInsensitiveCompare))
+        fetchRequest.sortDescriptors = [sortDescriptor, secondarySort]
         
         // Apply filter option
         switch filterOptions {
@@ -124,7 +136,8 @@ extension CoreDataManager {
         case .unlistened:
             fetchRequest.predicate = NSPredicate(format: "listens == %d", 0)
         }
-        
+        gSortOptions = sortOptions
+        gFilterOptions = filterOptions
         do {
             let albums = try container.viewContext.fetch(fetchRequest)
             albumsArr = albums
@@ -162,33 +175,38 @@ extension CoreDataManager {
     }
     
     func weeklyRecommendation() {
-        var unlistenedAlbums = albumsArr.filter { $0.listens == 0 }.sorted { $0.lastListened! < $1.lastListened! }
-        var longTimeNotListenedAlbums = albumsArr.filter { $0.listens > 0 }.sorted { $0.lastListened! < $1.lastListened! }
-        var mostListenedAlbums = albumsArr.sorted { $0.listens > $1.listens }
-        
-        // how many of each category we want to include in the recommendations
-        let numUnlistened = min(3, unlistenedAlbums.count)
-        let numLongTimeNotListened = min(7 - numUnlistened, longTimeNotListenedAlbums.count)
-        let numMostListened = 7 - numUnlistened - numLongTimeNotListened
-        
-        // draw the recommendations at random from each of the lists
+        var arr = albumsArr
         var recommendations: String = ""
+        var unlistenedAlbums = arr.filter { $0.listens == 0 }.sorted { $0.lastListened! < $1.lastListened! }
+        let numUnlistened = min(3, unlistenedAlbums.count)
+        
         for _ in 0..<numUnlistened {
             if let album = unlistenedAlbums.randomElement() {
                 recommendations += "\(String(describing: album.id!))\n"
                 unlistenedAlbums.removeAll(where: { $0.id == album.id })
+                arr.removeAll(where: { $0.id == album.id })
             }
         }
+
+        var longTimeNotListenedAlbums = arr.filter { $0.listens > 0 }.sorted { $0.lastListened! < $1.lastListened! }
+        let numLongTimeNotListened = min(7 - numUnlistened, longTimeNotListenedAlbums.count)
+        
         for _ in 0..<numLongTimeNotListened {
             if let album = longTimeNotListenedAlbums.randomElement() {
                 recommendations += "\(String(describing: album.id!))\n"
                 longTimeNotListenedAlbums.removeAll(where: { $0.id == album.id })
+                arr.removeAll(where: { $0.id == album.id })
             }
         }
+
+        var mostListenedAlbums = arr.sorted { $0.listens > $1.listens }
+        let numMostListened = 7 - numUnlistened - numLongTimeNotListened
+
         for _ in 0..<numMostListened {
             if let album = mostListenedAlbums.randomElement() {
                 recommendations += "\(String(describing: album.id!))\n"
                 mostListenedAlbums.removeAll(where: { $0.id == album.id })
+                arr.removeAll(where: { $0.id == album.id })
             }
         }
         
@@ -233,5 +251,34 @@ extension CoreDataManager {
         return []
         }
     }
+
+extension CoreDataManager {
+    func getMostListened() -> AlbumItem? {
+        if !albumsArr.isEmpty {
+            let mostListenedAlbums = albumsArr.sorted { $0.listens > $1.listens }
+            return mostListenedAlbums[0]
+        }
+        return nil
+    }
+    
+    func getFavGenre() -> [String: Int16] {
+        var genres: [String: Int16] = [:]
+        for album in albumsArr {
+            if let genre = album.genre, !genre.isEmpty {
+                genres[genre, default: 0] += album.listens
+            }
+        }
+        return genres
+    }
+    
+    func getOldest() -> AlbumItem? {
+        if albumsArr.count > 1 {
+            var longTimeNotListenedAlbums = albumsArr.sorted { $0.lastListened! < $1.lastListened! }
+            return longTimeNotListenedAlbums[0]
+            
+        }
+        return nil
+    }
+}
     
 
