@@ -18,40 +18,55 @@ struct RecommendationsView: View {
                 .offset(y: 178)
                 .padding(.bottom, -102)
             List {
-                RRButton(title: "Give Me A Record", background: Color("Cyan"), action: {
-                    viewModel.randomAlbum = CoreDataManager.shared.randomRecommendation()
-               })
-                if viewModel.randomAlbum != nil {
-                    ForEach(viewModel.randomAlbum) { album in
-                        let album = AlbumItemModel(id: album.id!, name: album.name!, artist: album.artist!, genre: album.genre!, listens: album.listens, lastListened: album.lastListened!)
-                        RecommendedAlbumItemView(viewModel: AlbumItemViewModel(albumItem: album))
-                            .foregroundColor(Color("Cyan"))
+                Section{
+                    HStack{
+                        Spacer()
+                        RRButton(title: "Give Me A Record", background: Color("Cyan"), action: {
+                            viewModel.randomAlbum = CoreDataManager.shared.randomRecommendation()
+                        })
+                        Spacer()
                     }
-
+                    if viewModel.randomAlbum != nil {
+                        ForEach(viewModel.randomAlbum) { album in
+                            let album = AlbumItemModel(id: album.id!, name: album.name!, artist: album.artist!, genre: album.genre!, listens: album.listens, lastListened: album.lastListened!)
+                            AlbumItemView(viewModel: AlbumItemViewModel(albumItem: album), color: Color("Cyan"))
+                                .foregroundColor(Color("Cyan"))
+                        }
+                    }
                 }
-                Spacer()
-                if viewModel.albums.count >= 7 {
-                    RRButton(title: "Weekly Records", background: Color("Cyan"), action: {
-                        CoreDataManager.shared.weeklyRecommendation()
-                        viewModel.weeklyAlbums = CoreDataManager.shared.loadWeek()
-                    })
-                    ForEach(viewModel.weeklyAlbums, id: \.id) { album in
-                        AlbumItemView(viewModel: AlbumItemViewModel(albumItem: album))
+                .listStyle(.insetGrouped)
+                .padding()
+                .listRowSeparator(.hidden)
+                
+                Section {
+                    HStack{
+                        Text("")
+                        RRButton(title: "Weekly Records", background: Color("Cyan"), action: {
+                            CoreDataManager.shared.weeklyRecommendation()
+                            viewModel.weeklyAlbums = CoreDataManager.shared.loadWeek()
+                        })
+                        Spacer()
                     }
-                    .foregroundStyle(Color("Cyan"))
-                    .padding()
-
-                } else {
-                    Text("Add at least seven records to get recommendations!")
-                        .padding()
+                    if viewModel.albums.count >= 7 {
+                        ForEach(viewModel.weeklyAlbums, id: \.id) { album in
+                            AlbumItemView(viewModel: AlbumItemViewModel(albumItem: album), color: Color("Cyan"))
+                        }
                         .foregroundStyle(Color("Cyan"))
+                    } else {
+                        Text("We need some more records to work with")
+                            .padding()
+                            .foregroundStyle(Color("Cyan"))
+                            .bold()
+                            .multilineTextAlignment(.center)
+                    }
                 }
+                
+                .padding()
             }
         }
     }
 }
 
 #Preview {
-    RecommendationsView(firstName: "")
+    RecommendationsView(firstName: "").environmentObject(AlbumListViewModel())
 }
-

@@ -9,6 +9,7 @@ import SwiftUI
 
 struct AlbumItemView: View {
     @StateObject var viewModel: AlbumItemViewModel
+    let color: Color
     
 
     var body: some View {
@@ -18,24 +19,26 @@ struct AlbumItemView: View {
             } label: {
                 HStack {
                     VStack{
-                        Text(viewModel.album.name)
+                        Text(String(viewModel.album.name))
                             .lineLimit(1)
                             .padding()
                     }
                     Spacer()
-                    VStack{
-                        Text(viewModel.album.artist)
-                            .lineLimit(1)
-                            .padding()
-
-                    }
-                    Spacer()
+//                    VStack{
+//                        Text(viewModel.album.artist)
+//                            .lineLimit(1)
+//                            .padding()
+//
+//                    }
+//                    Spacer()
 
                 }
             }
             .buttonStyle(.borderless)
 
-            
+            Divider()
+                .frame(width: 1, height: 30)
+                .overlay(color)
             Button {
                 CoreDataManager.shared.listen(id: viewModel.album.id)
                 viewModel.fetchAlbum(album: viewModel.album)
@@ -54,7 +57,7 @@ struct AlbumItemView: View {
             viewModel.fetchAlbum(album: viewModel.album)
         }
         .sheet(isPresented: $viewModel.showEditAlbumItemView, onDismiss: {viewModel.fetchAlbum(album: viewModel.album)} , content: {
-            EditAlbumItemView(index: 0, color: Color("Purple"), viewModel: EditAlbumItemViewModel(albumItem: viewModel.album), EditAlbumItemPresented: $viewModel.showEditAlbumItemView)
+            EditAlbumItemView(index: 0, color: color, viewModel: EditAlbumItemViewModel(albumItem: viewModel.album), EditAlbumItemPresented: $viewModel.showEditAlbumItemView)
         })
         
     }
@@ -62,6 +65,6 @@ struct AlbumItemView: View {
 }
 
 #Preview {
-    AlbumItemView(viewModel: AlbumItemViewModel(albumItem: AlbumItemModel(id: UUID(),name: "life of a wallflower", artist: "Whethan", genre: "EDM", listens: 10, lastListened: Date())))
+    AlbumItemView(viewModel: AlbumItemViewModel(albumItem: AlbumItemModel(id: UUID(),name: "life of a wallflower", artist: "Whethan", genre: "EDM", listens: 10, lastListened: Date())), color: Color("Cyan"))
 }
 

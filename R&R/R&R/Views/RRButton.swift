@@ -24,7 +24,8 @@ struct RRButton: View {
                 Text(title)
                     .foregroundStyle(.white)
                     .bold()
-            }
+                    .font(Font.custom("Cochin", fixedSize: 26))
+}
         }
     }
 }

@@ -40,6 +40,12 @@ struct MainView: View {
                     .tabItem {
                         Label("Profile", systemImage: "person.circle")
                     }
+                    .environmentObject(albumsModel)
+                    .onAppear {
+                        albumsModel.getFavGenre()
+                        albumsModel.getMostListend()
+                        albumsModel.getOldestListened()
+                    }
                     
             }
         } else {
