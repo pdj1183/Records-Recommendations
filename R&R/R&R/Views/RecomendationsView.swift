@@ -18,14 +18,16 @@ struct RecommendationsView: View {
                 .offset(y: 178)
                 .padding(.bottom, -102)
             List {
-                Section{
-                    HStack{
+                Section {
+                    HStack {
                         Spacer()
                         RRButton(title: "Give Me A Record", background: Color("Cyan"), action: {
                             viewModel.randomAlbum = CoreDataManager.shared.randomRecommendation()
                         })
                         Spacer()
                     }
+                    .padding(.vertical, 8)
+                    
                     if viewModel.randomAlbum != nil {
                         ForEach(viewModel.randomAlbum) { album in
                             let album = AlbumItemModel(id: album.id!, name: album.name!, artist: album.artist!, genre: album.genre!, listens: album.listens, lastListened: album.lastListened!)
@@ -39,19 +41,22 @@ struct RecommendationsView: View {
                 .listRowSeparator(.hidden)
                 
                 Section {
-                    HStack{
-                        Text("")
+                    HStack {
+                        Spacer()
                         RRButton(title: "Weekly Records", background: Color("Cyan"), action: {
                             CoreDataManager.shared.weeklyRecommendation()
                             viewModel.weeklyAlbums = CoreDataManager.shared.loadWeek()
                         })
                         Spacer()
                     }
+                    .padding(.vertical, 8)
+                    
                     if viewModel.albums.count >= 7 {
                         ForEach(viewModel.weeklyAlbums, id: \.id) { album in
                             AlbumItemView(viewModel: AlbumItemViewModel(albumItem: album), color: Color("Cyan"))
                         }
                         .foregroundStyle(Color("Cyan"))
+                        
                     } else {
                         Text("We need some more records to work with")
                             .padding()
@@ -60,9 +65,10 @@ struct RecommendationsView: View {
                             .multilineTextAlignment(.center)
                     }
                 }
-                
                 .padding()
             }
+            .listStyle(.insetGrouped)
+            .scrollContentBackground(.hidden)
         }
     }
 }

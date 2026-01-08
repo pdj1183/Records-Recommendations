@@ -19,47 +19,42 @@ struct LoginView: View {
     var body: some View {
         NavigationView {
             VStack {
-                //Header
                 HeaderVeiw(subTitle: "Welcome!", color: Color("Yellow"))
                 
-                //Login Header
+                Spacer()
                 
-                    SignInWithAppleButton(.continue) { requst in
-                        requst.requestedScopes = [.email, .fullName]
+                VStack(spacing: 16) {
+                    Text("Sign in to manage your album collection")
+                        .font(.headline)
+                        .foregroundStyle(.secondary)
+                        .multilineTextAlignment(.center)
+                        .padding(.horizontal)
+                    
+                    SignInWithAppleButton(.continue) { request in
+                        request.requestedScopes = [.email, .fullName]
                     } onCompletion: { result in
-                        
-                        switch result{
+                        switch result {
                         case .success(let auth):
                             switch auth.credential {
                             case let credential as ASAuthorizationAppleIDCredential:
-                                
-                                // User Id
                                 self.userId = credential.user
-                                
-                                // User Info
                                 self.email = credential.email ?? ""
                                 self.firstName = credential.fullName?.givenName ?? ""
-                                
-                                
                             default:
                                 break
                             }
-                            break
-                            
                         case .failure(let error):
                             print(error)
                         }
-                    
-                        }
-                    .signInWithAppleButtonStyle(
-                        colorScheme == .dark ? .white : .black)
-                .frame(height: 50)
-                .padding()
+                    }
+                    .signInWithAppleButtonStyle(colorScheme == .dark ? .white : .black)
+                    .frame(height: 55)
+                    .padding(.horizontal, 32)
+                }
+                .padding(.bottom, 100)
                 
-                
-                
+                Spacer()
             }
-            Spacer()
         }
     }
 }

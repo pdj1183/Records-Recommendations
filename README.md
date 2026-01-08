@@ -19,8 +19,8 @@ of times a record has been played.
 
 Showcase full collection along with play statistics.
 
-### Vinyl Edit Page
+### New Vinyl Page
 
-![Edit-page](./Images/Edit.png)
+![Edit-page](./Images/New.png)
 
 Allows for edits to record info or play counts.

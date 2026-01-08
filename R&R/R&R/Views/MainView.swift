@@ -20,33 +20,60 @@ struct MainView: View {
     var body: some View {
         if isSignedIn {
             // signed in
-            TabView{
-                AlbumListView(userId: self.userId)
-                    .environmentObject(albumsModel)
-                    .onAppear { albumsModel.fetchAlbums() }
-                    .tabItem {
-                        Label("Collection", systemImage: "waveform.circle")
+            if #available(iOS 26.0, *) {
+                TabView {
+                    Tab("Collection", systemImage: "waveform.circle") {
+                        AlbumListView(userId: self.userId)
+                            .environmentObject(albumsModel)
+                            .onAppear { albumsModel.fetchAlbums() }
                     }
-                RecommendationsView()
-                    .environmentObject(albumsModel)
-                    .onAppear { 
-                        albumsModel.getRandom()
-                        albumsModel.getWeek()
+                    Tab("Recommendations", systemImage: "house") {
+                        RecommendationsView()
+                            .environmentObject(albumsModel)
+                            .onAppear {
+                                albumsModel.getRandom()
+                                albumsModel.getWeek()
+                            }
                     }
-                    .tabItem {
-                        Label("Recomendations", systemImage: "house")
+                    Tab("Profile", systemImage: "person.circle") {
+                        ProfileView()
+                            .environmentObject(albumsModel)
+                            .onAppear {
+                                albumsModel.getFavGenre()
+                                albumsModel.getMostListend()
+                                albumsModel.getOldestListened()
+                            }
                     }
-                ProfileView()
-                    .tabItem {
-                        Label("Profile", systemImage: "person.circle")
-                    }
-                    .environmentObject(albumsModel)
-                    .onAppear {
-                        albumsModel.getFavGenre()
-                        albumsModel.getMostListend()
-                        albumsModel.getOldestListened()
-                    }
-                    
+                }
+                .tabBarMinimizeBehavior(.onScrollDown)
+            } else {
+                TabView {
+                    AlbumListView(userId: self.userId)
+                        .environmentObject(albumsModel)
+                        .onAppear { albumsModel.fetchAlbums() }
+                        .tabItem {
+                            Label("Collection", systemImage: "waveform.circle")
+                        }
+                    RecommendationsView()
+                        .environmentObject(albumsModel)
+                        .onAppear {
+                            albumsModel.getRandom()
+                            albumsModel.getWeek()
+                        }
+                        .tabItem {
+                            Label("Recommendations", systemImage: "house")
+                        }
+                    ProfileView()
+                        .environmentObject(albumsModel)
+                        .onAppear {
+                            albumsModel.getFavGenre()
+                            albumsModel.getMostListend()
+                            albumsModel.getOldestListened()
+                        }
+                        .tabItem {
+                            Label("Profile", systemImage: "person.circle")
+                        }
+                }
             }
         } else {
             LoginView()

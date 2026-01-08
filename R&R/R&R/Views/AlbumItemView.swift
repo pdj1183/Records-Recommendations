@@ -13,46 +13,48 @@ struct AlbumItemView: View {
     
 
     var body: some View {
-        HStack{
+        HStack(spacing: 12) {
             Button {
                 viewModel.showEditAlbumItemView = true
             } label: {
-                HStack {
-                    VStack{
-                        Text(String(viewModel.album.name))
-                            .lineLimit(1)
-                            .padding()
-                    }
+                HStack(spacing: 8) {
+                    Text(String(viewModel.album.name))
+                        .lineLimit(2)
+                        .truncationMode(.tail)
+                        .allowsTightening(true)
+                        .multilineTextAlignment(.leading)
                     Spacer()
-//                    VStack{
-//                        Text(viewModel.album.artist)
-//                            .lineLimit(1)
-//                            .padding()
-//
-//                    }
-//                    Spacer()
-
                 }
             }
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .layoutPriority(1)
             .buttonStyle(.borderless)
 
             Divider()
-                .frame(width: 1, height: 30)
-                .overlay(color)
+                .frame(width: 1, height: 35)
+                .foregroundStyle(color)
+                .opacity(0.7)
+            
             Button {
                 CoreDataManager.shared.listen(id: viewModel.album.id)
                 viewModel.fetchAlbum(album: viewModel.album)
             } label: {
-                VStack{
-                    HStack {
-                        Text("\(viewModel.album.listens)")
-                        Image(systemName: "waveform.badge.plus")
-                    }
+                HStack(spacing: 6) {
+                    Text("\(viewModel.album.listens)")
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.8)
+                    Image(systemName: "waveform.badge.plus")
+                        .imageScale(.medium)
                 }
             }
+            .frame(minWidth: 50)
+            .fixedSize(horizontal: true, vertical: false)
+            .layoutPriority(0)
             .buttonStyle(.borderless)
-
         }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(.horizontal, 12)
+        .padding(.vertical, 8)
         .onAppear {
             viewModel.fetchAlbum(album: viewModel.album)
         }
