@@ -28,51 +28,53 @@ struct NewItemView: View {
     @Binding var newItemPresented: Bool
     var onAddCompletion: (() -> Void)?
     var body: some View {
-        NavigationView{
+        NavigationView {
             VStack {
                 Form {
-                    // Album Name
-                    TextField("Title", text: $viewModel.album)
-                    // Artist
-                    TextField("Artist", text: $viewModel.artist)
-                    // Genre
-                    TextField("Genre", text: $viewModel.genre)
-                    // Button
-                    RRButton(title: "Add to Collection", background: .pink) {
-                        if viewModel.canAdd {
-                            add()
-                            newItemPresented = false
-                        } else {
-                            viewModel.showAlert = true
-                        }
+                    Section {
+                        TextField("Album Title", text: $viewModel.album)
+                        
+                        TextField("Artist", text: $viewModel.artist)
+                        
+                        TextField("Genre", text: $viewModel.genre)
                     }
-                    .padding()
+                    
+                    Section {
+                        RRButton(title: "Add to Collection", background: .pink) {
+                            if viewModel.canAdd {
+                                add()
+                                newItemPresented = false
+                            } else {
+                                viewModel.showAlert = true
+                            }
+                        }
+                        .listRowInsets(EdgeInsets())
+                        .listRowBackground(Color.clear)
+                    }
                 }
                 .alert(isPresented: $viewModel.showAlert) {
                     Alert(title: Text("Error"), message: Text("Please fill in Album Name and Artist"))
                 }
             }
-            .toolbar{
-                ToolbarItem(placement: .principal){
+            .toolbar {
+                ToolbarItem(placement: .principal) {
                     Text("New Album")
                         .font(Font.custom("Amoitar", fixedSize: 32))
                         .foregroundStyle(.pink)
                         .bold()
                         .padding(.top, 50)
                 }
-                ToolbarItem{
+                ToolbarItem(placement: .topBarTrailing) {
                     Button(action: {
-                        // Action
                         newItemPresented = false
-                    })
-                    {
-                        Image(systemName: "multiply")
+                    }) {
+                        Image(systemName: "xmark.circle.fill")
+                            .imageScale(.large)
+                            .foregroundStyle(.secondary)
                     }
-                    
                 }
             }
         }
-        
     }
 }
 

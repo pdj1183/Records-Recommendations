@@ -14,19 +14,21 @@ struct RRButton: View {
     
     var body: some View {
         Button {
-            // Login
             action()
         } label: {
             ZStack {
-                RoundedRectangle(cornerRadius: 10)
+                RoundedRectangle(cornerRadius: 12)
                     .foregroundStyle(background)
                 
                 Text(title)
                     .foregroundStyle(.white)
                     .bold()
-                    .font(Font.custom("Cochin", fixedSize: 26))
-}
+                    .font(Font.custom("Cochin", fixedSize: 24))
+                    .padding(.vertical, 12)
+                    .padding(.horizontal, 16)
+            }
         }
+        .frame(height: 50)
     }
 }
 

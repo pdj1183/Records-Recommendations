@@ -79,6 +79,7 @@ class CoreDataManager {
             if let albumToRemove = results.first {
                 container.viewContext.delete(albumToRemove) // Deleting the album
                 saveContext() // Save changes to the context
+                weeklyRecommendation()
                 print("Album removed successfully.")
             }
         } catch {
@@ -235,10 +236,19 @@ extension CoreDataManager {
                 if recommendation.recommendation != nil {
                     var Recommendations: [AlbumItemModel] = []
                     let ids = recommendation.recommendation!.split(separator: "\n")
-                    for id in ids {
-                        let id: UUID = UUID(uuidString: String(id))!
-                        let album = fetchAlbum(id: id)[0]
-                        Recommendations.append(album)
+                    for idStr in ids {
+                        guard let uuid = UUID(uuidString: String(idStr)) else {
+                            // Invalid UUID string in stored recommendations; regenerate a new set
+                            weeklyRecommendation()
+                            return loadWeek()
+                        }
+                        if let album = fetchAlbum(id: uuid).first {
+                            Recommendations.append(album)
+                        } else {
+                            // Album no longer exists; regenerate weekly recommendations
+                            weeklyRecommendation()
+                            return loadWeek()
+                        }
                     }
                     return Recommendations
                 }

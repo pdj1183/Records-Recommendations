@@ -30,84 +30,89 @@ struct EditAlbumItemView: View {
     }
     var body: some View {
         let dateFormatter = DateFormatter()
-        NavigationView{
+        NavigationView {
             VStack {
                 Form {
-                    // Album Name
-                    HStack{
-                        Text("Album Name")
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                        TextField("Title", text: $viewModel.name)
-                            .frame(maxWidth: .infinity, alignment: .trailing)
+                    Section(header: Text("Album Details")) {
+                        HStack {
+                            Text("Album Name")
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                            TextField("Title", text: $viewModel.name)
+                                .frame(maxWidth: .infinity, alignment: .trailing)
+                                .multilineTextAlignment(.trailing)
+                        }
+                        
+                        HStack {
+                            Text("Artist Name")
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                            TextField("Artist", text: $viewModel.artist)
+                                .multilineTextAlignment(.trailing)
+                        }
+                        
+                        HStack {
+                            Text("Genre")
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                            TextField("Genre", text: $viewModel.genre)
+                                .multilineTextAlignment(.trailing)
+                        }
                     }
-                    // Artist
-                    HStack{
-                        Text("Artist Name")
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                        TextField("Artist", text: $viewModel.artist)
-                    }
-                    // Genre
-                    HStack{
-                        Text("Genre")
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                        TextField("Genre", text: $viewModel.genre)
-                    }
-                    // Listens
-                    HStack{
+                    
+                    Section(header: Text("Listening Stats")) {
                         Picker("Listens", selection: viewModel.listensBinding) {
-                            ForEach(0...100, id: \.self) {number in
+                            ForEach(0...100, id: \.self) { number in
                                 Text("\(number)")
                             }
                         }
-                        .padding(.trailing, 120)
-                    }
-                    // Last Listened
-                    HStack{
-                        Text("Last Listened")
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                        Text(viewModel.lastListened!, formatter: itemFormatter)
-                    }
-                    // Buttons
-                    HStack{
-                        RRButton(title: "Cancel", background: .gray) {
-                            EditAlbumItemPresented = false
+                        
+                        HStack {
+                            Text("Last Listened")
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                            Text(viewModel.lastListened!, formatter: itemFormatter)
+                                .foregroundStyle(.secondary)
                         }
-                        .padding()
-                        RRButton(title: "Save", background: color) {
-                            if viewModel.canEdit {
-                                edit()
+                    }
+                    
+                    Section {
+                        HStack(spacing: 12) {
+                            RRButton(title: "Cancel", background: .gray) {
                                 EditAlbumItemPresented = false
-                            } else {
-                                viewModel.showAlert = true
+                            }
+                            RRButton(title: "Save", background: color) {
+                                if viewModel.canEdit {
+                                    edit()
+                                    EditAlbumItemPresented = false
+                                } else {
+                                    viewModel.showAlert = true
+                                }
                             }
                         }
-                        .padding()
-                    }}
+                        .listRowInsets(EdgeInsets())
+                        .listRowBackground(Color.clear)
+                    }
+                }
                 .alert(isPresented: $viewModel.showAlert) {
                     Alert(title: Text("Error"), message: Text("Please fill in Album Name and Artist"))
                 }
             }
-            .toolbar{
-                ToolbarItem(placement: .principal){
+            .toolbar {
+                ToolbarItem(placement: .principal) {
                     Text("Edit Album")
                         .foregroundStyle(color)
                         .font(Font.custom("Cochin", fixedSize: 32))
                         .bold()
                         .padding(.top, 50)
                 }
-                ToolbarItem{
+                ToolbarItem(placement: .topBarTrailing) {
                     Button(action: {
-                        // Action
                         EditAlbumItemPresented = false
-                    })
-                    {
-                        Image(systemName: "multiply")
+                    }) {
+                        Image(systemName: "xmark.circle.fill")
+                            .imageScale(.large)
+                            .foregroundStyle(.secondary)
                     }
-                    
                 }
             }
         }
-        
     }
     private let itemFormatter: DateFormatter = {
         let formatter = DateFormatter()
