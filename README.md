@@ -13,14 +13,20 @@ syncing across different devices.
 Shows off daily and weekly recommendations as well as simple stats on the number
 of times a record has been played.
 
-### Vinyl Collection Edit-page
+### Vinyl Collection page
 
 ![Collection-page](./Images/Collection.png)
 
 Showcase full collection along with play statistics.
 
-### New Vinyl Page
+### Profile Page
 
-![Edit-page](./Images/New.png)
+![Profile-page](./Images/Profile.png)
+
+Track your listening habits across your profile.
+
+### Vinyl Edit Page
+
+![Edit-page](./Images/Edit.png)
 
 Allows for edits to record info or play counts.
